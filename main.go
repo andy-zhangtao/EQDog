@@ -3,10 +3,7 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
-	"net/http"
 	"os"
-	"os/user"
-	"strings"
 	"time"
 
 	"github.com/urfave/cli"
@@ -17,6 +14,7 @@ const (
 )
 
 var sip string
+var sipParse bool
 
 func init() {
 	cli.HelpFlag = cli.BoolFlag{Name: "help"}
@@ -45,10 +43,6 @@ func main() {
 			Value: "127.0.0.1:8000",
 			Usage: "The DDog Server IP",
 		},
-		//cli.BoolFlag{
-		//	Name:  "ping",
-		//	Usage: "Ping DDog Server",
-		//},
 	}
 
 	app.Commands = []cli.Command{
@@ -122,85 +116,4 @@ func cliAction(c *cli.Context) error {
 	//}
 
 	return nil
-}
-
-func pingAction(c *cli.Context) error {
-	_, err := SandHttp(http.MethodGet, getPing(c))
-	if err != nil {
-		fmt.Printf("Ping [%s] Faild [%s]\n", sip, err.Error())
-	} else {
-		fmt.Printf("Ping [%s] Succ!", sip)
-		err := ioutil.WriteFile(getStorePath(), []byte(sip), 0777)
-		if err != nil {
-			fmt.Println(err)
-			os.Exit(-1)
-		}
-	}
-
-	return nil
-}
-
-//func getAPI(path string) string {
-//	getSIP()
-//	return "http://" + sip + "/v1" + path
-//}
-
-func getPing(c *cli.Context) string {
-	getSIP(c)
-	return "http://" + sip + "/_ping"
-}
-
-func getSIP(c *cli.Context) {
-	sip = c.GlobalString(SIP)
-	oip := getStoreEndpoint()
-
-	if !strings.Contains(sip, oip) && strings.Compare(sip, "127.0.0.1:8000") == 0 {
-		sip = oip
-	}
-}
-
-func nsAction(c *cli.Context) error {
-
-	return nil
-}
-
-// getStoreEndpoint 获取已经存储的服务端IP
-func getStoreEndpoint() string {
-	usr, err := user.Current()
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(-1)
-	}
-	path := ""
-	if !strings.HasSuffix(usr.HomeDir, "/") {
-		path = usr.HomeDir + "/.tdog"
-	} else {
-		path = usr.HomeDir + ".tdog"
-	}
-	if _, err := os.Stat(path); os.IsNotExist(err) {
-		return ""
-	}
-	data, err := ioutil.ReadFile(path)
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(-1)
-	}
-	return string(data)
-}
-
-// getStorePath 获取配置文件路径
-func getStorePath() string {
-	usr, err := user.Current()
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(-1)
-	}
-	path := ""
-	if !strings.HasSuffix(usr.HomeDir, "/") {
-		path = usr.HomeDir + "/.tdog"
-	} else {
-		path = usr.HomeDir + ".tdog"
-	}
-
-	return path
 }
