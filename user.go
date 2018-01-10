@@ -2,16 +2,18 @@ package main
 
 import (
 	"fmt"
+	"github.com/andy-zhangtao/gogather/zsort"
 )
 
 // User 客户端用户操作数据
 type User struct {
-	Sip       string    `json:"sip"`
-	Region    string    `json:"region"`
-	Namespace string    `json:"namespace"`
-	ClusterID string    `json:"cluster_id"`
-	Svc       SvcConf   `json:"svc"`
-	Con       Container `json:"con"`
+	Sip       string       `json:"sip"`
+	Region    string       `json:"region"`
+	Namespace string       `json:"namespace"`
+	ClusterID string       `json:"cluster_id"`
+	Svc       SvcConf      `json:"svc"`
+	Con       Container    `json:"con"`
+	SvcOR     SvcConfGroup `json:"svc_or"`
 }
 
 func configure() {
@@ -19,14 +21,7 @@ func configure() {
 	fmt.Printf("Region: %s \n", usr.Region)
 	fmt.Printf("ClusterID: %s \n", usr.ClusterID)
 	fmt.Printf("Namespace: %s \n", usr.Namespace)
-	fmt.Println("Service: ")
-	fmt.Printf("  |----Name: %s\n", usr.Svc.Name)
-	fmt.Printf("  |----Replicas: %v\n", usr.Svc.Replicas)
-	fmt.Printf("  |----Desc: %s\n", usr.Svc.Desc)
-	fmt.Printf("  |------AccessType: %v\n", usr.Svc.Netconf.AccessType)
-	fmt.Printf("  |------OutPort: %v\n", usr.Svc.Netconf.OutPort)
-	fmt.Printf("  |------InPort: %v\n", usr.Svc.Netconf.InPort)
-	fmt.Printf("  |------Protocol: %v\n", usr.Svc.Netconf.Protocol)
+	svcInfo()
 }
 
 func containerInfo() {
@@ -37,6 +32,28 @@ func containerInfo() {
 	fmt.Printf("Cmd: %s \n", usr.Con.Cmd)
 	fmt.Printf("Env: %s \n", usr.Con.Env)
 	fmt.Printf("Idx: %v \n", usr.Con.Idx)
+}
+
+func svcorInfo() {
+	fmt.Printf("Name: %s \n", usr.SvcOR.Name)
+	fmt.Println("Idx  |  SvcName  ")
+	svcorder := zsort.SortByValue(usr.SvcOR.SvcGroup)
+	n := 1
+	for i := len(svcorder) - 1; i >= 0; i-- {
+		fmt.Printf("  %d  | %s \n", n, svcorder[i].Key)
+		n++
+	}
+}
+
+func svcInfo() {
+	fmt.Println("Service: ")
+	fmt.Printf("  |----Name: %s\n", usr.Svc.Name)
+	fmt.Printf("  |----Replicas: %v\n", usr.Svc.Replicas)
+	fmt.Printf("  |----Desc: %s\n", usr.Svc.Desc)
+	fmt.Printf("  |------AccessType: %v\n", usr.Svc.Netconf.AccessType)
+	fmt.Printf("  |------OutPort: %v\n", usr.Svc.Netconf.OutPort)
+	fmt.Printf("  |------InPort: %v\n", usr.Svc.Netconf.InPort)
+	fmt.Printf("  |------Protocol: %v\n", usr.Svc.Netconf.Protocol)
 }
 
 func check(kind string) (ret bool) {

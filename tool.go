@@ -11,11 +11,12 @@ import (
 )
 
 const (
-	NSLabel  = "Choose The Namespace"
-	RGLabel  = "Choose The Region"
-	CLULabel = "Choose The Cluster ID"
-	SVCLabel = "Choose The Svc"
-	CONLabel = "Choose The Container"
+	NSLabel    = "Choose The Namespace"
+	RGLabel    = "Choose The Region"
+	CLULabel   = "Choose The Cluster ID"
+	SVCLabel   = "Choose The Svc"
+	CONLabel   = "Choose The Container"
+	SVCORLabel = "Choose The SvcOR"
 )
 
 func getAPI(path string) string {

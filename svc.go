@@ -11,9 +11,10 @@ import (
 	"strconv"
 )
 
-type HttpError struct {
-	Code int    `json:"code"`
-	Msg  string `json:"msg"`
+type HttpResp struct {
+	Code int         `json:"code"`
+	Msg  string      `json:"msg"`
+	Data interface{} `json:"data"`
 }
 
 // SvcConf 服务配置信息
@@ -47,7 +48,8 @@ type NetConfigure struct {
 // SvcConfGroup 服务群组配置信息
 // 作为自己的软服务编排(以业务场景为主,进行的服务编排.不依赖于k8s的服务编排)
 type SvcConfGroup struct {
-	SvcGroup  map[string]int `json:"svc_group"`
+	ID        string         `json:"_id"`
+	SvcGroup  map[string]int `json:"svcgroup"`
 	Namespace string         `json:"namespace"`
 	Clusterid string         `json:"clusterid"`
 	Name      string         `json:"name"`
@@ -110,6 +112,8 @@ func switchSVC(cmd string) (ret bool) {
 		}
 	case CHECK:
 		check("svc")
+	case CAT:
+		svcInfo()
 	case REMOVE:
 		removeSvc()
 	case QUTI:
@@ -347,7 +351,7 @@ func createSvc(name string) (err error) {
 		return
 	}
 
-	var ce HttpError
+	var ce HttpResp
 
 	err = json.Unmarshal(body, &ce)
 	if err != nil {

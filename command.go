@@ -9,6 +9,7 @@ const (
 	SVC       = "SC"
 	NAMESPACE = "NS"
 	CONTAINER = "CN"
+	SVCOR     = "SO"
 	CAT       = "CAT"
 	GET       = "LS"
 	NEW       = "NEW"

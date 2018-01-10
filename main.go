@@ -126,6 +126,8 @@ func cliAction(c *cli.Context) error {
 			svcOperation()
 		case CONTAINER:
 			containerOperation()
+		case SVCOR:
+			svcorOperation()
 		case QUTI:
 			fallthrough
 		case "Q":
