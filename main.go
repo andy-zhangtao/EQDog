@@ -124,6 +124,8 @@ func cliAction(c *cli.Context) error {
 			nsOperation()
 		case SVC:
 			svcOperation()
+		case CONTAINER:
+			containerOperation()
 		case QUTI:
 			fallthrough
 		case "Q":
