@@ -10,6 +10,11 @@ import (
 	"github.com/manifoldco/promptui"
 )
 
+const(
+	NSLabel = "Choose The Namespace"
+	RGLabel = "Choose The Region"
+)
+
 func getAPI(path string) string {
 	return "http://" + sip + "/v1" + path
 }
@@ -74,6 +79,7 @@ func prompt(label string, items []string) (result string, err error) {
 		//	"Saturday", "Sunday"},
 		Label: label,
 		Items: items,
+		Size:  10,
 	}
 
 	_, result, err = prompt.Run()

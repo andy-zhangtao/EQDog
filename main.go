@@ -15,9 +15,11 @@ const (
 
 var sip string
 var sipParse bool
+var usr *User
 
 func init() {
 	cli.HelpFlag = cli.BoolFlag{Name: "help"}
+	usr = new(User)
 }
 
 func main() {
@@ -53,6 +55,13 @@ func main() {
 			Description:     "Check the connect whether success",
 			SkipFlagParsing: true,
 			Action:          pingAction,
+		},
+		cli.Command{
+			Name:        "region",
+			Aliases:     []string{"rg"},
+			Usage:       "EQCloud Region",
+			Description: "Choose The Region You Want To Deploy",
+			Action:      metaAction,
 		},
 		cli.Command{
 			Name:        "namespace",

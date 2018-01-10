@@ -22,7 +22,7 @@ func nsAction(c *cli.Context) error {
 }
 
 func getAllNamespace(ns string) {
-	label := "Choose The Namespace"
+	//label := "Choose The Namespace"
 	var nssn []string
 
 	if strings.ToLower(ns) == "all" {
@@ -50,7 +50,7 @@ func getAllNamespace(ns string) {
 		nssn = append(nssn, nss.Name)
 	}
 
-	cns, err := prompt(label, nssn)
+	cns, err := prompt(NSLabel, nssn)
 	if err != nil {
 		fmt.Println(err)
 	}
