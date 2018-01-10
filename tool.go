@@ -10,9 +10,11 @@ import (
 	"github.com/manifoldco/promptui"
 )
 
-const(
-	NSLabel = "Choose The Namespace"
-	RGLabel = "Choose The Region"
+const (
+	NSLabel  = "Choose The Namespace"
+	RGLabel  = "Choose The Region"
+	CLULabel = "Choose The Cluster ID"
+	SVCLabel = "Choose The Svc"
 )
 
 func getAPI(path string) string {
@@ -90,3 +92,4 @@ func prompt(label string, items []string) (result string, err error) {
 
 	return
 }
+

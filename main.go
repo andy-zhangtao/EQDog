@@ -7,6 +7,8 @@ import (
 	"time"
 
 	"github.com/urfave/cli"
+	"github.com/manifoldco/promptui"
+	"strings"
 )
 
 const (
@@ -16,6 +18,7 @@ const (
 var sip string
 var sipParse bool
 var usr *User
+var debug bool
 
 func init() {
 	cli.HelpFlag = cli.BoolFlag{Name: "help"}
@@ -44,6 +47,10 @@ func main() {
 			Name:  SIP,
 			Value: "127.0.0.1:8000",
 			Usage: "The DDog Server IP",
+		},
+		cli.BoolFlag{
+			Name:  "debug",
+			Usage: "More Debug Info",
 		},
 	}
 
@@ -78,23 +85,11 @@ func main() {
 		},
 	}
 
-	//app.CommandNotFound = func(c *cli.Context, command string) {
-	//	fmt.Printf("Thar be no %q here.\n", command)
-	//}
-	//app.OnUsageError = func(c *cli.Context, err error, isSubcommand bool) error {
-	//	if isSubcommand {
-	//		return err
-	//	}
-	//
-	//	fmt.Printf("WRONG: %#v\n", err)
-	//	return nil
-	//}
-
 	app.Run(os.Args)
 }
 
 func cliAction(c *cli.Context) error {
-
+	debug = c.GlobalBool("debug")
 	getSIP(c)
 
 	err := ioutil.WriteFile(getStorePath(), []byte(sip), 0777)
@@ -103,26 +98,41 @@ func cliAction(c *cli.Context) error {
 		os.Exit(-1)
 	}
 
-	//sip = c.GlobalString(SIP)
-	//if sip == "" {
-	//	if _, err := os.Stat(path); os.IsNotExist(err) {
-	//		fmt.Println("Please Specify Server IP!")
-	//		os.Exit(-1)
-	//	} else {
-	//		data, err := ioutil.ReadFile(path)
-	//		if err != nil {
-	//			fmt.Println(err)
-	//			os.Exit(-1)
-	//		}
-	//		sip = string(data)
-	//	}
-	//} else {
-	//	err := ioutil.WriteFile(path, []byte(sip), 0777)
-	//	if err != nil {
-	//		fmt.Println(err)
-	//		os.Exit(-1)
-	//	}
-	//}
+	for {
+		prompt := promptui.Prompt{
+			Label:     "EQCloud >",
+			IsVimMode: true,
+			AllowEdit: true,
+		}
+
+		result, err := prompt.Run()
+		if err != nil {
+			if err == promptui.ErrAbort || err == promptui.ErrEOF || err == promptui.ErrInterrupt {
+				os.Exit(0)
+			}
+			fmt.Printf("[EQCloud] Meet Error[%s]\n", err.Error())
+			os.Exit(-1)
+		}
+		switch strings.ToUpper(result) {
+		case PING:
+			pingAction(c)
+		case REGION:
+			metaAction(c)
+		case INFO:
+			configure()
+		case NAMESPACE:
+			nsOperation()
+		case SVC:
+			svcOperation()
+		case QUTI:
+			fallthrough
+		case "Q":
+			fallthrough
+		case EXIT:
+			fmt.Println("Bye!")
+			os.Exit(0)
+		}
+	}
 
 	return nil
 }

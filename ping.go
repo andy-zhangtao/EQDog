@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"os"
 	"github.com/urfave/cli"
 	"net/http"
 	"io/ioutil"
@@ -13,11 +12,11 @@ func pingAction(c *cli.Context) error {
 	if err != nil {
 		fmt.Printf("Ping [%s] Faild [%s]\n", sip, err.Error())
 	} else {
-		fmt.Printf("Ping [%s] Succ!", sip)
+		fmt.Printf("Ping [%s] Succ!\n", sip)
 		err := ioutil.WriteFile(getStorePath(), []byte(sip), 0777)
 		if err != nil {
 			fmt.Println(err)
-			os.Exit(-1)
+			//os.Exit(-1)
 		}
 	}
 
