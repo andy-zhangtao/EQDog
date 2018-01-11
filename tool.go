@@ -27,8 +27,10 @@ func getSIP(c *cli.Context) {
 	if !sipParse {
 		sip = c.GlobalString(SIP)
 		oip := getStoreEndpoint()
-
-		if !strings.Contains(sip, oip) && strings.Compare(sip, "127.0.0.1:8000") == 0 {
+		fmt.Printf("[%s][%s]\n", sip, oip)
+		if sip == "" {
+			sip = oip
+		} else if !strings.Contains(sip, oip) && strings.Compare(sip, "127.0.0.1:8000") == 0 {
 			sip = oip
 			sipParse = true
 		}
@@ -77,19 +79,21 @@ func getStorePath() string {
 }
 
 func prompt(label string, items []string) (result string, err error) {
-	prompt := promptui.Select{
-		//Label: "Select Day",
-		//Items: []string{"Monday", "Tuesday", "Wednesday", "Thursday", "Friday",
-		//	"Saturday", "Sunday"},
-		Label: label,
-		Items: items,
-		Size:  10,
-	}
-
-	_, result, err = prompt.Run()
-	if err != nil {
-		fmt.Printf("Prompt failed %v\n", err)
+	if len(items) == 0 {
+		fmt.Println("There are no records!")
 		return
+	} else {
+		prompt := promptui.Select{
+			Label: label,
+			Items: items,
+			Size:  10,
+		}
+
+		_, result, err = prompt.Run()
+		if err != nil {
+			fmt.Printf("Prompt failed %v\n", err)
+			return
+		}
 	}
 
 	return

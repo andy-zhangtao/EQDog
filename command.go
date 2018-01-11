@@ -13,6 +13,7 @@ const (
 	CAT       = "CAT"
 	GET       = "LS"
 	NEW       = "NEW"
+	RUN       = "RUN"
 	CREATE    = "CREATE"
 	CHECK     = "CHECK"
 	REMOVE    = "RM"

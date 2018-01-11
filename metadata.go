@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/urfave/cli"
 	"errors"
+	"io/ioutil"
 )
 
 type MetaData struct {
@@ -89,4 +90,22 @@ func getClusterID() (err error) {
 
 	}
 	return
+}
+
+func serverPing(c *cli.Context) error {
+	if c.NArg() == 0 {
+		fmt.Println("Lost DDog Server Domain/IP")
+		return nil
+	}
+	_, err := SandHttp(http.MethodGet, getStrictPing(c.Args()[0]))
+	if err != nil {
+		fmt.Printf("Ping [%s] Faild [%s]\n", sip, err.Error())
+	} else {
+		fmt.Printf("Ping [%s] Succ!\n", c.Args()[0])
+		err := ioutil.WriteFile(getStorePath(), []byte(c.Args()[0]), 0777)
+		if err != nil {
+			fmt.Println(err)
+		}
+	}
+	return nil
 }

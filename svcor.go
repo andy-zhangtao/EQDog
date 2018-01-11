@@ -70,6 +70,13 @@ func switchSOR(cmd string) (ret bool) {
 		}
 	case CHECK:
 		check("con")
+	case RUN:
+		if len(args) <2{
+			fmt.Println("No Valid SvcOR Name")
+		}else{
+			runSor(strings.TrimSpace(args[1]))
+		}
+
 	case REMOVE:
 		rmSor()
 	case QUTI:
@@ -333,6 +340,31 @@ func rmSor() {
 			return
 		}
 	}
+
+	return
+}
+
+func runSor(name string) (err error){
+	if ret := check("namespace"); !ret {
+		return
+	}
+
+	path := getAPI("/cloud/svc/group/run")
+	path += "?namespace=" + usr.Namespace+"&clusterid="+usr.ClusterID+"&svcgroup="+name
+
+	if debug {
+		fmt.Printf("[Run SvcOR] Invoke API [%s] \n", path)
+	}
+
+	data, err := SandHttp(http.MethodPost, path)
+	if err != nil {
+		return
+	}
+
+	if debug {
+		fmt.Printf("[Get ALl SVCOR INFO] Response Data [%s] \n", string(data))
+	}
+
 
 	return
 }

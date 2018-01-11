@@ -27,3 +27,7 @@ func getPing(c *cli.Context) string {
 	getSIP(c)
 	return "http://" + sip + "/_ping"
 }
+
+func getStrictPing(ip string)string{
+	return "http://" + ip + "/_ping"
+}

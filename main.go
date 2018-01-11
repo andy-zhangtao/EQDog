@@ -43,11 +43,11 @@ func main() {
 
 	app.Action = cliAction
 	app.Flags = []cli.Flag{
-		cli.StringFlag{
-			Name:  SIP,
-			Value: "127.0.0.1:8000",
-			Usage: "The DDog Server IP",
-		},
+		//cli.StringFlag{
+		//	Name:  SIP,
+		//	Value: "127.0.0.1:8000",
+		//	Usage: "The DDog Server IP",
+		//},
 		cli.BoolFlag{
 			Name:  "debug",
 			Usage: "More Debug Info",
@@ -55,6 +55,12 @@ func main() {
 	}
 
 	app.Commands = []cli.Command{
+		cli.Command{
+			Name:    "server",
+			Aliases: []string{"sv"},
+			Usage:   "Setting the ddog server assess domain/ip port",
+			Action:  serverPing,
+		},
 		cli.Command{
 			Name:            "ping",
 			Aliases:         []string{"pg"},
